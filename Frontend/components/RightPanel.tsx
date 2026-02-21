@@ -1,15 +1,35 @@
-// components/RightPanel.tsx
-import VideoStack from "@/components/VideoStack";
-import IntelligenceFeed from "@/components/IntelligenceFeed";
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
-export default function RightPanel() {
+import VideoStack from "./VideoStack";
+import type { ConnectionState } from "@/hooks/useWebRTC";
+
+interface RightPanelProps {
+  localVideoRef: React.RefObject<HTMLVideoElement | null>;
+  remoteVideoRef: React.RefObject<HTMLVideoElement | null>;
+  connectionState: ConnectionState;
+  isCameraOn: boolean;
+  candidateName: string;
+}
+
+export default function RightPanel({
+  localVideoRef,
+  remoteVideoRef,
+  connectionState,
+  isCameraOn,
+  candidateName,
+}: RightPanelProps) {
   return (
-    <div className="h-full flex flex-col gap-4">
-      {/* Video Stack */}
-      <VideoStack />
-      
-      {/* Intelligence Feed */}
-      <IntelligenceFeed />
-    </div>
+    <aside className="h-full">
+      <VideoStack
+        localVideoRef={localVideoRef}
+        remoteVideoRef={remoteVideoRef}
+        connectionState={connectionState}
+        isCameraOn={isCameraOn}
+        candidateName={candidateName}
+      />
+    </aside>
   );
 }

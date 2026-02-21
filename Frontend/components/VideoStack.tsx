@@ -1,77 +1,118 @@
-// components/VideoStack.tsx
-"use client";
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { Mic, MicOff, Video, VideoOff } from "lucide-react";
+import { VideoOff } from "lucide-react";
+import type { ConnectionState } from "@/hooks/useWebRTC";
 
-export default function VideoStack() {
-  const interviewerRef = useRef<HTMLDivElement>(null);
-  const candidateRef = useRef<HTMLDivElement>(null);
+interface VideoStackProps {
+  localVideoRef: React.RefObject<HTMLVideoElement | null>;
+  remoteVideoRef: React.RefObject<HTMLVideoElement | null>;
+  connectionState: ConnectionState;
+  isCameraOn: boolean;
+  candidateName: string;
+}
+
+export default function VideoStack({
+  localVideoRef,
+  remoteVideoRef,
+  connectionState,
+  isCameraOn,
+  candidateName,
+}: VideoStackProps) {
+  const interviewerContainerRef = useRef<HTMLDivElement>(null);
+  const candidateContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from([interviewerRef.current, candidateRef.current], {
-        scale: 0.95,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: "power2.out",
-      });
-    }, [interviewerRef, candidateRef]);
+      gsap.from(
+        [candidateContainerRef.current, interviewerContainerRef.current],
+        {
+          opacity: 0,
+          scale: 0.9,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "back.out(1.7)",
+        }
+      );
+    }, [interviewerContainerRef, candidateContainerRef]);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div className="space-y-3">
-      {/* Interviewer Video */}
-      <div ref={interviewerRef} className="relative aspect-video bg-zinc-900/80 rounded-xl overflow-hidden border border-zinc-800/50 group">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-600/20 border-2 border-blue-500/30 flex items-center justify-center">
-            <span className="text-2xl text-zinc-400">You</span>
+    <div className="grid grid-cols-1 gap-3">
+      {/* Candidate Video (Remote stream for the interviewer) */}
+      <div
+        ref={candidateContainerRef}
+        className="relative aspect-video bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 group shadow-lg"
+      >
+        <video
+          ref={remoteVideoRef}
+          autoPlay
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {connectionState !== "connected" && (
+          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
+            <div className="w-16 h-16 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+              {connectionState === "connecting" ? (
+                <div className="w-6 h-6 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <span className="text-xl font-bold text-zinc-100">
+                  {candidateName
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-        
-        {/* Live Badge */}
-        <div className="absolute top-2 left-2 flex items-center gap-1 bg-red-500/90 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-medium">
-          <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-          LIVE
-        </div>
+        )}
 
-        {/* Name Tag */}
-        <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm border border-white/10">
-          Interviewer (You)
-        </div>
-
-        {/* Controls */}
-        <div className="absolute bottom-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button className="p-1.5 bg-black/60 backdrop-blur-sm rounded-lg hover:bg-black/80 transition-colors">
-            <Mic className="w-3 h-3 text-green-400" />
-          </button>
-          <button className="p-1.5 bg-black/60 backdrop-blur-sm rounded-lg hover:bg-black/80 transition-colors">
-            <Video className="w-3 h-3 text-green-400" />
-          </button>
+        <div className="absolute bottom-3 left-3 flex items-center gap-2">
+          <div className="bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg text-[11px] font-medium text-white border border-white/10">
+            {candidateName}
+          </div>
+          <div
+            className={`w-2 h-2 rounded-full ${connectionState === "connected"
+                ? "bg-emerald-500"
+                : connectionState === "connecting"
+                  ? "bg-amber-500 animate-pulse"
+                  : "bg-zinc-500"
+              }`}
+          />
         </div>
       </div>
 
-      {/* Candidate Video */}
-      <div ref={candidateRef} className="relative aspect-video bg-zinc-900/80 rounded-xl overflow-hidden border border-zinc-800/50 group">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500/20 to-blue-600/20 border-2 border-emerald-500/30 flex items-center justify-center">
-            <span className="text-2xl text-zinc-400">SC</span>
+      {/* Interviewer Video (Local — You) */}
+      <div
+        ref={interviewerContainerRef}
+        className="relative aspect-video bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 group shadow-lg"
+      >
+        <video
+          ref={localVideoRef}
+          autoPlay
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ transform: "scaleX(-1)" }}
+        />
+        {!isCameraOn && (
+          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
+            <div className="w-12 h-12 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+              <VideoOff className="w-5 h-5 text-zinc-500" />
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Name Tag */}
-        <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm border border-white/10">
-          Sarah Chen (Candidate)
-        </div>
-
-        {/* Muted Indicator */}
-        <div className="absolute top-2 right-2 bg-amber-500/90 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
-          <MicOff className="w-3 h-3" />
-          Muted
+        <div className="absolute bottom-3 left-3">
+          <div className="bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg text-[11px] font-medium text-white border border-white/10">
+            You
+          </div>
         </div>
       </div>
     </div>
