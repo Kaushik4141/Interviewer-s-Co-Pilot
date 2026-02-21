@@ -1,29 +1,30 @@
-// app/page.tsx
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import InterviewDashboard from "@/components/InterviewDashboard";
+import { useRouter } from "next/navigation";
+import Lobby from "@/components/Lobby";
 
 export default function Home() {
-  const mainRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Initial page load animation
-      gsap.from(mainRef.current, {
-        opacity: 0,
-        duration: 0.5,
-        ease: "power2.inOut",
-      });
-    }, mainRef);
+  const handleStartSession = (candidateName: string, role: string) => {
+    // Store session info and navigate to interviewer dashboard
+    const params = new URLSearchParams({ name: candidateName, role });
+    router.push(`/interviewer?${params.toString()}`);
+  };
 
-    return () => ctx.revert();
-  }, []);
+  const handleJoinSession = (code: string) => {
+    // Navigate to candidate dashboard
+    router.push(`/candidate?code=${encodeURIComponent(code)}`);
+  };
 
   return (
-    <main ref={mainRef} className="h-screen overflow-hidden bg-zinc-950">
-      <InterviewDashboard />
-    </main>
+    <div className="w-full h-screen">
+      <Lobby
+        onStartSession={handleStartSession}
+        onJoinSession={handleJoinSession}
+      />
+
+      
+    </div>
   );
 }

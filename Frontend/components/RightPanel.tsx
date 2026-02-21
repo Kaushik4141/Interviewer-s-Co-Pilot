@@ -1,15 +1,14 @@
-// components/RightPanel.tsx
-import VideoStack from "@/components/VideoStack";
-import IntelligenceFeed from "@/components/IntelligenceFeed";
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import VideoStack from "./VideoStack";
 
 export default function RightPanel() {
   return (
-    <div className="h-full flex flex-col gap-4">
-      {/* Video Stack */}
+    <aside className="h-full">
       <VideoStack />
-      
-      {/* Intelligence Feed */}
-      <IntelligenceFeed />
-    </div>
+    </aside>
   );
 }
