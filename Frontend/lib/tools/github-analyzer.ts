@@ -11,7 +11,8 @@ export const analyzeCodebase = tool({
     repoUrl: z.string().describe('The URL of the GitHub repository.'),
     markdownContent: z.string().describe('The repository content in markdown format, typically obtained from Crawl4AI.'),
   }),
-  execute: async ({ repoUrl, markdownContent }) => {
+  execute: async (args: { repoUrl: string; markdownContent: string }) => {
+    const { markdownContent } = args;
     const techStack: string[] = [];
     const notablePatterns: string[] = [];
     let complexityScore = 0;
@@ -64,11 +65,11 @@ export const analyzeCodebase = tool({
       architectureStyle = 'Standard Monolith';
     }
 
-    return {
+    return JSON.stringify({
       techStack,
       architectureStyle,
       complexityScore,
       notablePatterns
-    };
+    });
   },
 });
