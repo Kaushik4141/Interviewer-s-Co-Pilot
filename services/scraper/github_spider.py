@@ -123,6 +123,9 @@ RAW_CONTENT_SCHEMA = {
 def _normalise_repo_url(url: str) -> str:
     """Ensure the URL points to a GitHub repo root (no trailing slash)."""
     url = url.strip().rstrip("/")
+    # Remove .git suffix if present
+    if url.endswith(".git"):
+        url = url[:-4]
     # Remove /tree/main etc. if someone pastes a branch URL
     url = re.sub(r"/tree/[^/]+.*$", "", url)
     return url
@@ -174,23 +177,22 @@ class GitHubSpider:
     def _browser_config() -> BrowserConfig:
         return BrowserConfig(
             headless=True,
-            text_mode=True,
             viewport_width=1280,
             viewport_height=900,
         )
 
     @staticmethod
     def _run_config(strategy: JsonCssExtractionStrategy | None = None) -> CrawlerRunConfig:
-        cfg = CrawlerRunConfig(
+        kwargs = dict(
             cache_mode=CacheMode.ENABLED,
             wait_until="networkidle",
-            page_timeout=30000,
+            page_timeout=60000,
             exclude_external_links=True,
             excluded_tags=["script", "style", "footer", "nav"],
         )
         if strategy:
-            cfg.extraction_strategy = strategy
-        return cfg
+            kwargs["extraction_strategy"] = strategy
+        return CrawlerRunConfig(**kwargs)
 
     # ----- directory listing extraction -----
 
@@ -204,7 +206,6 @@ class GitHubSpider:
 
         strategy = JsonCssExtractionStrategy(FILE_TREE_SCHEMA)
         cfg = self._run_config(strategy)
-        cfg.wait_for = "css:table[aria-labelledby], css:div[role='grid']"
 
         async with self._semaphore:
             result = await crawler.arun(url=url, config=cfg)
