@@ -3,18 +3,44 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Code2, Monitor, Play, Terminal, Settings, ChevronRight, ChevronDown } from "lucide-react";
-import MonacoEditor, { LANGUAGE_LABELS, type SupportedLanguage } from "./MonacoEditor";
+import { Code2, Monitor, Play, Terminal, ChevronRight, ChevronDown, Loader2 } from "lucide-react";
+import MonacoEditor, { LANGUAGE_LABELS, DEFAULT_CODE, type SupportedLanguage } from "./MonacoEditor";
+import { useCodeReceiver } from "@/hooks/useCodeSync";
+import { executeCode, formatResult } from "@/lib/judge0";
 
 export default function CenterWorkspace() {
   const [activeTab, setActiveTab] = useState<"compiler" | "screen">("compiler");
   const [language, setLanguage] = useState<SupportedLanguage>("typescript");
+  const [code, setCode] = useState<string>(DEFAULT_CODE["typescript"]);
   const [output, setOutput] = useState<string>("> System initialized. Ready for evaluation.");
+  const [isRunning, setIsRunning] = useState(false);
+  const [isSynced, setIsSynced] = useState(false);
 
-  const handleRunCode = () => {
-    setOutput("> Compiling...\n> Running test cases...\n> [PASS] Test Case 1: Basic LRU operations\n> [PASS] Test Case 2: Capacity eviction\n> [PASS] Test Case 3: Key update refresh\n> All tests passed (0.12s)");
+  useCodeReceiver({
+    onCodeChange: useCallback((newCode: string) => {
+      setCode(newCode);
+      setIsSynced(true);
+    }, []),
+    onLanguageChange: useCallback((newLang: SupportedLanguage) => {
+      setLanguage(newLang);
+      setIsSynced(true);
+    }, []),
+  });
+
+  const handleRunCode = async () => {
+    setIsRunning(true);
+    setOutput("> Compiling...\n> Running test cases...");
+    try {
+      const result = await executeCode(code, language);
+      setOutput(formatResult(result));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      setOutput(`> \u274c Error: ${message}`);
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   return (
@@ -59,9 +85,11 @@ export default function CenterWorkspace() {
             <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400 pointer-events-none" />
           </div>
 
-          <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Syncing
+          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+            <span className={`w-1.5 h-1.5 rounded-full ${isSynced ? 'bg-emerald-500' : 'bg-zinc-500'} animate-pulse`} />
+            <span className={isSynced ? 'text-emerald-400' : 'text-zinc-400'}>
+              {isSynced ? 'Live Mirror' : 'Waiting'}
+            </span>
           </div>
         </div>
       </div>
@@ -78,7 +106,7 @@ export default function CenterWorkspace() {
               className="h-full flex flex-col"
             >
               <div className="flex-1 min-h-0">
-                <MonacoEditor language={language} />
+                <MonacoEditor language={language} value={code} readOnly={isSynced} />
               </div>
 
               {/* Console / Controls */}
@@ -90,10 +118,15 @@ export default function CenterWorkspace() {
                   </div>
                   <button
                     onClick={handleRunCode}
-                    className="flex items-center gap-2 px-4 py-1.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity"
+                    disabled={isRunning}
+                    className="flex items-center gap-2 px-4 py-1.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
-                    <Play className="w-3 h-3 fill-current" />
-                    Run Tests
+                    {isRunning ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Play className="w-3 h-3 fill-current" />
+                    )}
+                    {isRunning ? "Running..." : "Run Tests"}
                   </button>
                 </div>
                 <div className="bg-zinc-900 dark:bg-zinc-950 rounded-xl p-4 font-mono text-[11px] text-zinc-300 border border-zinc-800/50 shadow-inner h-32 overflow-y-auto scrollbar-thin">

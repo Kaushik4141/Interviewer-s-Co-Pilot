@@ -19,8 +19,10 @@ import {
     Settings,
     ChevronDown
 } from "lucide-react";
-import MonacoEditor, { LANGUAGE_LABELS, type SupportedLanguage } from "./MonacoEditor";
+import MonacoEditor, { LANGUAGE_LABELS, DEFAULT_CODE, type SupportedLanguage } from "./MonacoEditor";
 import { motion, AnimatePresence } from "motion/react";
+import { useCodeSender } from "@/hooks/useCodeSync";
+import { executeCode, formatResult } from "@/lib/judge0";
 
 interface CandidateDashboardProps {
     candidateName: string;
@@ -33,8 +35,11 @@ export default function CandidateDashboard({ candidateName, role, onExit }: Cand
     const [isVideoOff, setIsVideoOff] = useState(false);
     const [isSharing, setIsSharing] = useState(false);
     const [language, setLanguage] = useState<SupportedLanguage>("typescript");
+    const [code, setCode] = useState<string>(DEFAULT_CODE["typescript"]);
     const [output, setOutput] = useState<string>("> Environment ready. Good luck with your assessment.");
+    const [isRunning, setIsRunning] = useState(false);
 
+    const { broadcastCode, broadcastLanguage } = useCodeSender();
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -47,12 +52,29 @@ export default function CandidateDashboard({ candidateName, role, onExit }: Cand
                 ease: "power4.out",
             });
         }, containerRef);
-
         return () => ctx.revert();
     }, []);
 
-    const handleRunCode = () => {
-        setOutput("> Compiling...\n> Running...\n> [PASS] Test Case 1\n> [PASS] Test Case 2\n> Execution successful.");
+    const handleLanguageChange = (newLang: SupportedLanguage) => {
+        setLanguage(newLang);
+        const newCode = DEFAULT_CODE[newLang];
+        setCode(newCode);
+        broadcastLanguage(newLang);
+        broadcastCode(newCode);
+    };
+
+    const handleRunCode = async () => {
+        setIsRunning(true);
+        setOutput("> Compiling...\n> Running...");
+        try {
+            const result = await executeCode(code, language);
+            setOutput(formatResult(result));
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "Unknown error";
+            setOutput(`> \u274c Error: ${message}`);
+        } finally {
+            setIsRunning(false);
+        }
     };
 
     return (
@@ -101,7 +123,7 @@ export default function CandidateDashboard({ candidateName, role, onExit }: Cand
                             <div className="relative">
                                 <select
                                     value={language}
-                                    onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
+                                    onChange={(e) => handleLanguageChange(e.target.value as SupportedLanguage)}
                                     className="appearance-none bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-xs font-bold uppercase tracking-wider rounded-lg pl-3 pr-8 py-1.5 cursor-pointer hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100"
                                 >
                                     {Object.entries(LANGUAGE_LABELS).map(([key, label]) => (
@@ -113,15 +135,23 @@ export default function CandidateDashboard({ candidateName, role, onExit }: Cand
                         </div>
                         <button
                             onClick={handleRunCode}
-                            className="flex items-center gap-2 px-4 py-1.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity"
+                            disabled={isRunning}
+                            className="flex items-center gap-2 px-4 py-1.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50"
                         >
                             <Play className="w-3 h-3 fill-current" />
-                            Run Code
+                            {isRunning ? "Running..." : "Run Code"}
                         </button>
                     </div>
 
                     <div className="flex-1 min-h-0">
-                        <MonacoEditor language={language} />
+                        <MonacoEditor
+                            language={language}
+                            value={code}
+                            onChange={(val) => {
+                                setCode(val);
+                                broadcastCode(val);
+                            }}
+                        />
                     </div>
 
                     {/* Console */}
