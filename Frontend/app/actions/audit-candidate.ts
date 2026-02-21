@@ -65,7 +65,6 @@ export async function auditCandidate(
   // 2. Generate structured output
   const { object } = await generateObject({
     model: model,
-    mode: 'json',
     system: systemPrompt,
     prompt: userPrompt,
     schema: auditResponseSchema,

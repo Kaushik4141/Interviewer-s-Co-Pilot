@@ -9,7 +9,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-import { insertChunk, buildTranscript, countChunks } from '@/lib/db/transcript-db';
 import { runPartialInterviewAnalysis } from '@/app/actions/partial-interview-analysis';
 import {
     appendTranscriptChunks,
@@ -96,7 +95,10 @@ async function triggerReEvaluate(
     allRedFlags: string[];
     reasoningSummary: string;
 }> {
-    const transcript = buildTranscript(candidateId);
+    const prevState = getInterviewState(candidateId);
+    
+    // Build transcript from memory
+    const transcript = prevState.transcriptChunks.map(c => `${c.speaker}: ${c.text}`).join('\n');
 
     if (!transcript || !githubAuditSummary) {
         return {
@@ -107,7 +109,6 @@ async function triggerReEvaluate(
         };
     }
 
-    const prevState = getInterviewState(candidateId);
 
     const analysis = await runPartialInterviewAnalysis({
         candidateId,
@@ -161,10 +162,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         const payload = parsed.data;
         const chunks = normaliseChunks(payload);
 
-        // 3. Persist every chunk to SQLite
-        const insertedRows = chunks.map((c) =>
-            insertChunk(payload.candidateId, c.speaker, c.text, c.timestamp),
-        );
+
 
         // 4. Also sync to in-memory state (so existing interview route stays consistent)
         appendTranscriptChunks(
@@ -183,7 +181,7 @@ export async function POST(request: Request): Promise<NextResponse> {
             auditSummary,
         );
 
-        const totalChunks = countChunks(payload.candidateId);
+        const totalChunks = getInterviewState(payload.candidateId).transcriptChunks.length;
 
         // 6. Respond
         return NextResponse.json({

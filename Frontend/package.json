@@ -12,7 +12,10 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.30",
+    "@daily-co/daily-js": "^0.87.0",
+    "@jitsi/react-sdk": "^1.4.4",
     "@monaco-editor/react": "^4.6.0",
+    "@types/jitsi-meet": "^2.0.5",
     "ai": "^6.0.97",
     "better-sqlite3": "^12.6.2",
     "framer-motion": "^11.0.3",
@@ -34,8 +37,8 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.24",
-    "eslint": "^4.0.0",
-    "eslint-config-next": "^12.0.4",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.2.3",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"
