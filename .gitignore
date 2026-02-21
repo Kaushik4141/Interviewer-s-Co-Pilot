@@ -231,3 +231,6 @@ Thumbs.db
 # Environment variables
 .env
 .env.*
+
+# SQLite transcript database
+.data/
