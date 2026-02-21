@@ -10,6 +10,8 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
 import { runPartialInterviewAnalysis } from '@/app/actions/partial-interview-analysis';
+import { generateFinalVerdict } from '@/lib/ai/consensus-judge';
+import { getInitialContext } from '@/lib/ai-orchestrator';
 import {
     appendTranscriptChunks,
     getInterviewState,
@@ -96,7 +98,7 @@ async function triggerReEvaluate(
     reasoningSummary: string;
 }> {
     const prevState = getInterviewState(candidateId);
-    
+
     // Build transcript from memory
     const transcript = prevState.transcriptChunks.map(c => `${c.speaker}: ${c.text}`).join('\n');
 
@@ -181,9 +183,31 @@ export async function POST(request: Request): Promise<NextResponse> {
             auditSummary,
         );
 
-        const totalChunks = getInterviewState(payload.candidateId).transcriptChunks.length;
+        // 6. Trigger "Final Verdict" — Consensus Judge (Step 7 Blueprint)
+        let finalVerdict = null;
+        const currentState = getInterviewState(payload.candidateId);
+        const transcript = currentState.transcriptChunks.map(c => `${c.speaker}: ${c.text}`).join('\n');
 
-        // 6. Respond
+        if (transcript && auditSummary) {
+            // Build mock context merging Github Summary into the schema expected by the Judge
+            const contextForJudge = {
+                ...getInitialContext(),
+                interviewTranscript: transcript,
+                redFlags: evaluation.allRedFlags,
+                githubData: [{
+                    techStack: [],
+                    patterns: [],
+                    codeQuality: auditSummary
+                }] // Inject GitHub Audit summary into codeQuality as a text blob
+            };
+
+            finalVerdict = await generateFinalVerdict(contextForJudge);
+            console.log(`[Consensus Judge] ${payload.candidateId} Final Verdict:`, finalVerdict.hireStatus);
+        }
+
+        const totalChunks = currentState.transcriptChunks.length;
+
+        // 7. Respond
         return NextResponse.json({
             ok: true,
             candidateId: payload.candidateId,
@@ -195,6 +219,13 @@ export async function POST(request: Request): Promise<NextResponse> {
                 allRedFlags: evaluation.allRedFlags,
                 reasoningSummary: evaluation.reasoningSummary,
             },
+            finalVerdict: finalVerdict
+                ? {
+                    hireStatus: finalVerdict.hireStatus,
+                    behavioralDNA: finalVerdict.behavioralDNA,
+                    reasoning: finalVerdict.reasoning
+                }
+                : null
         });
     } catch (error) {
         console.error('[interviewsync] Webhook error:', error);

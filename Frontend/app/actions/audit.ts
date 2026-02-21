@@ -107,7 +107,7 @@ export async function auditCandidate(
             ? 'SecurityAnalyst must challenge the candidate claim of "Security Best Practices" from the resume.'
             : 'SecurityAnalyst should still report concrete security risks if found.',
           'If a vulnerability is found, contradictionScore must increase by 20 points.',
-          'Use this response contract for actualApproach: [{ method: string, fileReference: string, evidence?: string }].',
+          'Use this response contract for actualApproach: [{ feature: string, method: string, observation: string }].',
           'When identifying an implementation method (e.g., JWT Auth), you MUST provide the specific filename from the Scout\'s markdown where you found this evidence (e.g., lib/auth.ts).',
           'Then produce discrepancies, confidence notes, and high-pressure interview questions.',
           'Keep findings concrete and tied to observable code signals.',

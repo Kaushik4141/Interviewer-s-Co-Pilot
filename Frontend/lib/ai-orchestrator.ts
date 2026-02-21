@@ -1,5 +1,5 @@
-import { model } from './ai/config';
-export { model };
+import { openai } from '@ai-sdk/openai';
+export const model = openai('gpt-4o');
 
 export interface CandidateContext {
   resume: {
@@ -19,7 +19,13 @@ export interface CandidateContext {
   }>;
   discrepancies: string[];
   jdMatchScore?: number;
-  signatureMatch?: string;
+  actualApproach?: Array<{
+    feature: string;
+    method: string;
+    observation: string;
+  }>;
+  contradictionScore?: number;
+  savageVerdict?: string;
 }
 
 export function getInitialContext(): CandidateContext {
@@ -32,6 +38,8 @@ export function getInitialContext(): CandidateContext {
     githubData: [],
     discrepancies: [],
     jdMatchScore: 0,
-    signatureMatch: '',
+    actualApproach: [],
+    contradictionScore: 0,
+    savageVerdict: '',
   };
 }

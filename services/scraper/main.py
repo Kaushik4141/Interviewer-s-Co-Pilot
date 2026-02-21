@@ -1,8 +1,11 @@
 """
-FastAPI wrapper for the GitHub Spider service.
+FastAPI wrapper for the GitHub Spider + LeetCode scraper services.
 
-POST /crawl  →  accepts { "repo_url": "...", "branch": "..." }
-             ←  returns the full Architectural Blueprint JSON
+POST /crawl     →  accepts { "repo_url": "...", "branch": "..." }
+                ←  returns the full Architectural Blueprint JSON
+
+POST /leetcode  →  accepts { "username": "..." }
+                ←  returns a Markdown summary of the candidate's LeetCode profile
 """
 
 import traceback
@@ -13,6 +16,8 @@ from pydantic import BaseModel, HttpUrl
 
 from github_spider import crawl_github_repo
 from leetcode_scraper import get_leetcode_stats, get_user_solved_problems, get_clone_data
+from leetcode_crawl4ai import scrape_leetcode_profile
+from problem_generator import generate_similar_problem
 
 MOCK_PUBLIC_DEMO_DNA = {
     "titleSlug": "two-sum",
@@ -161,5 +166,51 @@ async def user_audit(username: str):
                 "error": "Master Integration failed",
                 "message": str(exc)
             }
+        )
+
+
+# ---------------------------------------------------------------------------
+# LeetCode Crawl4AI Endpoint
+# ---------------------------------------------------------------------------
+
+class LeetCodeRequest(BaseModel):
+    username: str
+
+
+@app.post("/leetcode")
+async def leetcode_audit(req: LeetCodeRequest):
+    """
+    Scrape a LeetCode profile using Crawl4AI (headless browser).
+    Returns:
+      - Markdown summary of stats, languages, and recent problems
+      - An AI-generated similar problem based on the candidate's
+        recent solved problem topics and skill level
+    """
+    try:
+        # 1. Scrape profile (stats + recent solved)
+        profile = await scrape_leetcode_profile(req.username)
+
+        # 2. Use AI to generate a NEW similar problem
+        recent = profile.get("recent_solved", [])
+        languages = profile.get("languages", [])
+        stats = profile.get("stats", {})
+
+        generated_problem = generate_similar_problem(
+            recent_solved=recent,
+            languages=languages,
+            stats=stats,
+        )
+
+        profile["generated_problem"] = generated_problem
+        return profile
+
+    except Exception as exc:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "LeetCode scrape failed",
+                "message": str(exc),
+            },
         )
 

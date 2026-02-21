@@ -1,0 +1,48 @@
+﻿{
+    "title":  "Custom Challenge: Hash Table, String, Design",
+    "difficulty":  "Medium",
+    "description":  "Given the candidate\u0027s expertise in Hash Table, String, Design, design an efficient solution that processes the input data.\n\nBased on their recent problems: Design Log Storage System, Design In-Memory File System, LRU Cache.\n\nWrite a function that takes an array of integers and returns the optimal result using concepts from: Hash Table, String, Design.",
+    "examples":  [
+                     {
+                         "input":  "[1, 2, 3, 4, 5]",
+                         "output":  "15",
+                         "explanation":  "Sum of all elements"
+                     },
+                     {
+                         "input":  "[10, -5, 3]",
+                         "output":  "8",
+                         "explanation":  "Process according to rules"
+                     }
+                 ],
+    "constraints":  [
+                        "1 \u003c= data.length \u003c= 10^5",
+                        "-10^9 \u003c= data[i] \u003c= 10^9"
+                    ],
+    "topicTags":  [
+                      "Hash Table",
+                      "String",
+                      "Design",
+                      "Ordered Set"
+                  ],
+    "starterCode":  {
+                        "language":  "Python",
+                        "code":  "class Solution:\n    def solve(self, data: list[int]) -\u003e int:\n        # Your code here\n        pass"
+                    },
+    "hints":  [
+                  "Think about how Hash Table can help optimize the solution.",
+                  "Consider edge cases with empty or single-element inputs."
+              ],
+    "_source":  "fallback_template",
+    "_based_on":  [
+                      "Design Log Storage System",
+                      "Design In-Memory File System",
+                      "LRU Cache"
+                  ],
+    "_topics_used":  [
+                         "Hash Table",
+                         "String",
+                         "Design",
+                         "Ordered Set",
+                         "Trie"
+                     ]
+}
