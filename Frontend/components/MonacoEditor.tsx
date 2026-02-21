@@ -11,50 +11,34 @@ export type SupportedLanguage = "typescript" | "javascript" | "python" | "java" 
 
 interface MonacoEditorProps {
   language?: SupportedLanguage;
+  value?: string;
+  onChange?: (value: string) => void;
+  readOnly?: boolean;
 }
 
 const DEFAULT_CODE: Record<SupportedLanguage, string> = {
   typescript: `/**
  * Architectural Scout - Technical Assessment
- * Problem: LRU Cache Implementation
+ * Problem: Two Sum
  */
 
-class LRUCache {
-  private capacity: number;
-  private cache: Map<number, number>;
-
-  constructor(capacity: number) {
-    this.capacity = capacity;
-    this.cache = new Map();
-  }
-
-  get(key: number): number {
-    if (!this.cache.has(key)) return -1;
-    
-    const val = this.cache.get(key)!;
-    this.cache.delete(key);
-    this.cache.set(key, val);
-    return val;
-  }
-
-  put(key: number, value: number): void {
-    if (this.cache.has(key)) {
-      this.cache.delete(key);
-    } else if (this.cache.size >= this.capacity) {
-      const oldestKey = this.cache.keys().next().value;
-      this.cache.delete(oldestKey);
+function twoSum(nums: number[], target: number): number[] {
+  for (let i = 0; i < nums.length; i++) {
+    for (let j = i + 1; j < nums.length; j++) {
+      if (nums[i] + nums[j] === target) {
+        return [i, j];
+      }
     }
-    this.cache.set(key, value);
   }
+  return [];
 }
 
-// Test Suite
-const lru = new LRUCache(2);
-lru.put(1, 1);
-lru.put(2, 2);
-console.log(lru.get(1)); // 1
-lru.put(3, 3); // evicts key 2
-console.log(lru.get(2)); // -1
+// Test
+const result = twoSum([2, 7, 11, 15], 9);
+console.log(result); // [0, 1]
+
+const result2 = twoSum([3, 2, 4], 6);
+console.log(result2); // [1, 2]
 `,
   javascript: `/**
  * Architectural Scout - Technical Assessment
@@ -389,13 +373,16 @@ const MONACO_LANGUAGE: Record<SupportedLanguage, string> = {
 
 export { LANGUAGE_LABELS, DEFAULT_CODE };
 
-export default function MonacoEditor({ language = "typescript" }: MonacoEditorProps) {
+export default function MonacoEditor({ language = "typescript", value, onChange, readOnly = false }: MonacoEditorProps) {
+  const displayValue = value !== undefined ? value : DEFAULT_CODE[language];
+
   return (
     <Editor
       height="100%"
       language={MONACO_LANGUAGE[language]}
-      value={DEFAULT_CODE[language]}
+      value={displayValue}
       theme="vs-dark"
+      onChange={(val) => onChange?.(val ?? "")}
       options={{
         minimap: { enabled: false },
         fontSize: 13,
@@ -410,6 +397,7 @@ export default function MonacoEditor({ language = "typescript" }: MonacoEditorPr
         smoothScrolling: true,
         contextmenu: false,
         renderLineHighlight: "all",
+        readOnly,
       }}
     />
   );
