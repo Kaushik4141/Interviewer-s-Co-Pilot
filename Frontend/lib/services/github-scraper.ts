@@ -1,4 +1,4 @@
-import { Crawl4AI } from 'crawl4ai';
+import { Crawl4AI, type CrawlRequest, type CrawlResult } from 'crawl4ai';
 
 /**
  * Uses Crawl4AI to fetch a codebase, bypassing basic anti-bot measures using a 'Session'.
@@ -9,7 +9,7 @@ import { Crawl4AI } from 'crawl4ai';
  * @returns Clean Markdown string representing the extracted code structures
  */
 export async function fetchRepoStructure(githubUrl: string): Promise<string> {
-  let crawler;
+  let crawler: Crawl4AI;
   
   try {
     // Assuming backend endpoint is configured or local instance is running for Crawl4AI
@@ -36,20 +36,22 @@ export async function fetchRepoStructure(githubUrl: string): Promise<string> {
 
   for (const url of urlsToCrawl) {
     try {
-      // Execute the crawl using the specified map content strategy
-      const result = await crawler.crawl({
+      const crawlRequest: CrawlRequest = {
         urls: [url],
         session_id: sessionId,
         // We use MapContentStrategy to target specific code snippets and file tree structures 
         // avoiding heavy assets or irrelevant boilerplate to save on LLM token costs.
-        // @ts-expect-error MapContentStrategy isn't in official types but works in backend
-        extraction_strategy: {
-          type: 'MapContentStrategy',
+        crawler_config: {
+          scraping_strategy: {
+            type: 'MapContentStrategy',
+          },
         },
-        response_format: 'markdown'
-      });
+      };
 
-      const resultData = result?.[0];
+      // Execute the crawl using the configured content strategy.
+      const result = await crawler.crawl(crawlRequest);
+
+      const resultData: CrawlResult | undefined = result[0];
       const markdown = resultData?.markdown;
       if (markdown) {
         // markdown can be a string or a MarkdownGenerationResult object based on SDK types
