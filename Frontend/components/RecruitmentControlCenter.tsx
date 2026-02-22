@@ -138,23 +138,23 @@ export default function RecruitmentControlCenter() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white p-6 font-sans">
+        <div className="min-h-screen bg-white text-slate-900 p-6 font-sans">
             {/* Header */}
             <div className="max-w-[1400px] mx-auto mb-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center shadow-md shadow-indigo-200">
                             <Fingerprint className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-lg font-bold tracking-tight">Recruitment Control Center</h1>
-                            <p className="text-[11px] text-zinc-500 font-medium">Hiring Forensics &middot; Live Pipeline</p>
+                            <h1 className="text-lg font-bold tracking-tight text-slate-900">Recruitment Control Center</h1>
+                            <p className="text-[11px] text-slate-500 font-medium">Hiring Forensics · Live Pipeline</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[11px] text-emerald-400 font-semibold">System Live</span>
+                            <span className="text-[11px] text-emerald-600 font-semibold">System Live</span>
                         </div>
                     </div>
                 </div>
@@ -201,17 +201,17 @@ function StatCard({ stat, delay }: { stat: typeof PIPELINE_STATS[0]; delay: numb
             ref={tilt.ref}
             onMouseMove={tilt.handleMouseMove}
             onMouseLeave={tilt.handleMouseLeave}
-            className="bento-block rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] p-5 cursor-default hover:border-white/[0.1] transition-colors duration-300 group"
+            className="bento-block rounded-lg bg-white border border-slate-200 p-5 cursor-default hover:border-indigo-300 hover:shadow-lg transition-all duration-300 group"
             style={{ transformStyle: "preserve-3d" }}
         >
             <div className="flex items-center justify-between mb-4">
-                <span className="text-zinc-500 group-hover:text-zinc-400 transition-colors">{stat.icon}</span>
-                <TrendingUp className="w-3 h-3 text-emerald-500/60" />
+                <span className="text-slate-400 group-hover:text-indigo-500 transition-colors">{stat.icon}</span>
+                <TrendingUp className="w-3 h-3 text-emerald-600" />
             </div>
-            <p className="text-3xl font-black tracking-tight font-mono text-white mb-1">
+            <p className="text-3xl font-black tracking-tight font-mono text-slate-900 mb-1">
                 {count}{stat.suffix}
             </p>
-            <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider">{stat.label}</p>
+            <p className="text-[11px] text-slate-500 font-medium uppercase tracking-wider">{stat.label}</p>
         </div>
     );
 }
@@ -227,24 +227,24 @@ function MiniActivityCard() {
             ref={tilt.ref}
             onMouseMove={tilt.handleMouseMove}
             onMouseLeave={tilt.handleMouseLeave}
-            className="bento-block rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] p-5 cursor-default hover:border-white/[0.1] transition-colors duration-300 flex flex-col justify-between"
+            className="bento-block rounded-lg bg-white border border-slate-200 p-5 cursor-default hover:border-indigo-300 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
             style={{ transformStyle: "preserve-3d" }}
         >
             <div className="flex items-center justify-between mb-3">
-                <Activity className="w-4 h-4 text-indigo-400/70" />
-                <span className="text-[9px] text-zinc-600 font-mono">LIVE</span>
+                <Activity className="w-4 h-4 text-indigo-600" />
+                <span className="text-[9px] text-slate-400 font-mono">LIVE</span>
             </div>
             {/* Mini sparkline bars */}
             <div className="flex items-end gap-[3px] h-8">
                 {[35, 55, 40, 70, 50, 85, 60, 90, 45, 75, 65, 80].map((h, i) => (
                     <div
                         key={i}
-                        className="flex-1 rounded-sm bg-indigo-500/30 group-hover:bg-indigo-500/50 transition-colors"
+                        className="flex-1 rounded-sm bg-indigo-200 group-hover:bg-indigo-300 transition-colors"
                         style={{ height: `${h}%` }}
                     />
                 ))}
             </div>
-            <p className="text-[10px] text-zinc-500 font-medium mt-2">Audit Activity</p>
+            <p className="text-[10px] text-slate-500 font-medium mt-2">Audit Activity</p>
         </div>
     );
 }
@@ -264,46 +264,46 @@ function RecentAuditsCard() {
             ref={tilt.ref}
             onMouseMove={tilt.handleMouseMove}
             onMouseLeave={tilt.handleMouseLeave}
-            className="bento-block rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] p-5 h-full hover:border-white/[0.1] transition-colors duration-300"
+            className="bento-block rounded-lg bg-white border border-slate-200 p-5 h-full hover:border-indigo-300 hover:shadow-lg transition-all duration-300"
             style={{ transformStyle: "preserve-3d" }}
         >
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <Eye className="w-4 h-4 text-indigo-400" />
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Recent Forensic Audits</span>
+                    <Eye className="w-4 h-4 text-indigo-600" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Recent Forensic Audits</span>
                 </div>
-                <span className="text-[10px] text-zinc-600 font-mono">{rankedCandidates.length} candidates</span>
+                <span className="text-[10px] text-slate-400 font-mono">{rankedCandidates.length} candidates</span>
             </div>
 
             <div className="space-y-1 max-h-[280px] overflow-y-auto pr-1 custom-scrollbar">
                 {rankedCandidates.map((candidate, i) => {
                     const matchColor =
-                        candidate.dnaMatch >= 80 ? { bg: "bg-emerald-500/15", text: "text-emerald-400", border: "border-emerald-500/20" } :
-                            candidate.dnaMatch >= 60 ? { bg: "bg-amber-500/15", text: "text-amber-400", border: "border-amber-500/20" } :
-                                { bg: "bg-red-500/15", text: "text-red-400", border: "border-red-500/20" };
+                        candidate.dnaMatch >= 80 ? { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" } :
+                            candidate.dnaMatch >= 60 ? { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" } :
+                                { bg: "bg-red-50", text: "text-red-700", border: "border-red-200" };
 
                     const rank = i + 1;
-                    const rankColor = rank === 1 ? "text-amber-500" : rank === 2 ? "text-slate-400" : rank === 3 ? "text-amber-700 hover:text-amber-600" : "text-zinc-500";
+                    const rankColor = rank === 1 ? "text-amber-600" : rank === 2 ? "text-slate-500" : rank === 3 ? "text-amber-800" : "text-slate-400";
 
                     return (
                         <Link
                             key={i}
                             href={`/forensic?name=${encodeURIComponent(candidate.name)}&role=${encodeURIComponent(candidate.role)}`}
-                            className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-white/[0.03] transition-colors cursor-pointer group"
+                            className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer group"
                         >
                             <div className="flex items-center gap-3 min-w-0">
                                 {/* Rank */}
                                 <div className={`w-4 text-center text-[11px] font-black font-mono flex-shrink-0 ${rankColor}`}>
                                     #{rank}
                                 </div>
-                                <div className={`w-8 h-8 rounded-lg ${candidate.verdict === "pass" ? "bg-indigo-500/15 border-indigo-500/20" : "bg-red-500/10 border-red-500/20"} border flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}>
-                                    <span className="text-[11px] font-bold text-white/70">
+                                <div className={`w-8 h-8 rounded-lg ${candidate.verdict === "pass" ? "bg-indigo-50 border-indigo-200" : "bg-red-50 border-red-200"} border flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}>
+                                    <span className="text-[11px] font-bold text-slate-600">
                                         {candidate.name.split(" ").map(n => n[0]).join("")}
                                     </span>
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-[12px] font-semibold text-zinc-200 truncate group-hover:text-indigo-400 transition-colors">{candidate.name}</p>
-                                    <p className="text-[10px] text-zinc-500 truncate">{candidate.role}</p>
+                                    <p className="text-[12px] font-semibold text-slate-700 truncate group-hover:text-indigo-600 transition-colors">{candidate.name}</p>
+                                    <p className="text-[10px] text-slate-400 truncate">{candidate.role}</p>
                                 </div>
                             </div>
 
@@ -314,9 +314,9 @@ function RecentAuditsCard() {
                                 </span>
                                 {/* Verdict Icon */}
                                 {candidate.verdict === "pass" ? (
-                                    <CheckCircle className="w-4 h-4 text-emerald-500 group-hover:scale-110 transition-transform" />
+                                    <CheckCircle className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
                                 ) : (
-                                    <XCircle className="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform" />
+                                    <XCircle className="w-4 h-4 text-red-600 group-hover:scale-110 transition-transform" />
                                 )}
                             </div>
                         </Link>
@@ -377,15 +377,15 @@ function TalentDNACard() {
             ref={tilt.ref}
             onMouseMove={tilt.handleMouseMove}
             onMouseLeave={tilt.handleMouseLeave}
-            className="bento-block rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] p-5 h-full hover:border-white/[0.1] transition-colors duration-300 flex flex-col"
+            className="bento-block rounded-lg bg-white border border-slate-200 p-5 h-full hover:border-indigo-300 hover:shadow-lg transition-all duration-300 flex flex-col"
             style={{ transformStyle: "preserve-3d" }}
         >
             <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                    <BarChart3 className="w-4 h-4 text-indigo-400" />
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Talent DNA Insights</span>
+                    <BarChart3 className="w-4 h-4 text-indigo-600" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Talent DNA Insights</span>
                 </div>
-                <span className="text-[10px] text-zinc-600 font-mono">Pool Analysis</span>
+                <span className="text-[10px] text-slate-400 font-mono">Pool Analysis</span>
             </div>
 
             <div className="flex-1 flex items-center justify-center">
@@ -402,7 +402,7 @@ function TalentDNACard() {
                                 key={i}
                                 points={pts}
                                 fill="none"
-                                stroke="rgba(255,255,255,0.04)"
+                                stroke="rgba(0,0,0,0.05)"
                                 strokeWidth="1"
                             />
                         );
@@ -410,13 +410,13 @@ function TalentDNACard() {
 
                     {/* Axis lines */}
                     {axisPoints.map((a, i) => (
-                        <line key={i} x1={cx} y1={cy} x2={a.x} y2={a.y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                        <line key={i} x1={cx} y1={cy} x2={a.x} y2={a.y} stroke="rgba(0,0,0,0.05)" strokeWidth="1" />
                     ))}
 
                     {/* Data polygon (filled) */}
                     <polygon
                         points={dataPoly}
-                        fill="rgba(99,102,241,0.12)"
+                        fill="rgba(99,102,241,0.08)"
                         stroke="none"
                     />
                     {/* Data polygon (stroke — animated) */}
@@ -431,7 +431,7 @@ function TalentDNACard() {
 
                     {/* Data dots */}
                     {dataPoints.map((p, i) => (
-                        <circle key={i} cx={p.x} cy={p.y} r="3" fill="rgb(99,102,241)" stroke="#050505" strokeWidth="2" />
+                        <circle key={i} cx={p.x} cy={p.y} r="3" fill="rgb(99,102,241)" stroke="white" strokeWidth="2" />
                     ))}
 
                     {/* Axis labels */}
@@ -442,7 +442,7 @@ function TalentDNACard() {
                             y={a.labelY}
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            className="fill-zinc-500 text-[9px] font-medium"
+                            className="fill-slate-400 text-[9px] font-medium"
                         >
                             {a.label}
                         </text>
@@ -454,7 +454,7 @@ function TalentDNACard() {
             <div className="flex items-center justify-between mt-2">
                 {RADAR_DATA.map(d => (
                     <div key={d.axis} className="text-center">
-                        <p className={`text-[11px] font-bold font-mono ${d.value >= 70 ? "text-emerald-400" : d.value >= 50 ? "text-amber-400" : "text-red-400"}`}>{d.value}</p>
+                        <p className={`text-[11px] font-bold font-mono ${d.value >= 70 ? "text-emerald-600" : d.value >= 50 ? "text-amber-600" : "text-red-600"}`}>{d.value}</p>
                     </div>
                 ))}
             </div>
@@ -470,9 +470,9 @@ function ContradictionFeed() {
     const tilt = useTilt();
 
     const severityStyle = {
-        high: { icon: <Skull className="w-3.5 h-3.5" />, color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/15", dot: "bg-red-500" },
-        medium: { icon: <AlertTriangle className="w-3.5 h-3.5" />, color: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/15", dot: "bg-amber-500" },
-        low: { icon: <Zap className="w-3.5 h-3.5" />, color: "text-zinc-400", bg: "bg-zinc-500/10", border: "border-zinc-500/15", dot: "bg-zinc-500" },
+        high: { icon: <Skull className="w-3.5 h-3.5" />, color: "text-red-600", bg: "bg-red-50", border: "border-red-200", dot: "bg-red-500" },
+        medium: { icon: <AlertTriangle className="w-3.5 h-3.5" />, color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200", dot: "bg-amber-500" },
+        low: { icon: <Zap className="w-3.5 h-3.5" />, color: "text-slate-500", bg: "bg-slate-50", border: "border-slate-200", dot: "bg-slate-500" },
     };
 
     return (
@@ -480,17 +480,17 @@ function ContradictionFeed() {
             ref={tilt.ref}
             onMouseMove={tilt.handleMouseMove}
             onMouseLeave={tilt.handleMouseLeave}
-            className="bento-block rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] p-5 hover:border-white/[0.1] transition-colors duration-300"
+            className="bento-block rounded-lg bg-white border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-lg transition-all duration-300"
             style={{ transformStyle: "preserve-3d" }}
         >
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-red-400" />
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Contradiction Feed</span>
+                    <AlertTriangle className="w-4 h-4 text-red-600" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Contradiction Feed</span>
                 </div>
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-red-500/10 border border-red-500/15">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-red-50 border border-red-200">
                     <span className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
-                    <span className="text-[9px] text-red-400 font-bold font-mono">LIVE</span>
+                    <span className="text-[9px] text-red-600 font-bold font-mono">LIVE</span>
                 </div>
             </div>
 
@@ -500,13 +500,13 @@ function ContradictionFeed() {
                     return (
                         <div
                             key={item.id}
-                            className={`flex items-start gap-3 px-3 py-2.5 rounded-xl ${s.bg} border ${s.border} transition-colors group/flag cursor-default`}
+                            className={`flex items-start gap-3 px-3 py-2.5 rounded-lg ${s.bg} border ${s.border} transition-colors group/flag cursor-default`}
                         >
                             <div className={`mt-0.5 ${s.color} flex-shrink-0`}>{s.icon}</div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-[11px] text-zinc-300 leading-snug">{item.text}</p>
+                                <p className="text-[11px] text-slate-600 leading-snug">{item.text}</p>
                             </div>
-                            <span className="text-[9px] text-zinc-600 font-mono flex-shrink-0 mt-0.5">{item.time}</span>
+                            <span className="text-[9px] text-slate-400 font-mono flex-shrink-0 mt-0.5">{item.time}</span>
                         </div>
                     );
                 })}
@@ -545,37 +545,37 @@ function QuickStartCard() {
             ref={tilt.ref}
             onMouseMove={tilt.handleMouseMove}
             onMouseLeave={tilt.handleMouseLeave}
-            className="bento-block rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] p-5 h-full hover:border-white/[0.1] transition-colors duration-300 flex flex-col"
+            className="bento-block rounded-lg bg-white border border-slate-200 p-5 h-full hover:border-indigo-300 hover:shadow-lg transition-all duration-300 flex flex-col"
             style={{ transformStyle: "preserve-3d" }}
         >
             <div className="flex items-center gap-2 mb-4">
-                <Zap className="w-4 h-4 text-indigo-400" />
-                <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Quick Audit</span>
+                <Zap className="w-4 h-4 text-indigo-600" />
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Quick Audit</span>
             </div>
 
             <div
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                className={`flex-1 rounded-xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center gap-3 cursor-pointer group/drop
+                className={`flex-1 rounded-lg border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center gap-3 cursor-pointer group/drop
                     ${isDragging
-                        ? "border-indigo-500/60 bg-indigo-500/10"
-                        : "border-white/[0.06] hover:border-indigo-500/30 hover:bg-white/[0.02]"
+                        ? "border-indigo-400 bg-indigo-50"
+                        : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50"
                     }`}
             >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors
-                    ${isDragging ? "bg-indigo-500/20" : "bg-white/[0.03] group-hover/drop:bg-indigo-500/10"}`}>
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-colors
+                    ${isDragging ? "bg-indigo-100" : "bg-slate-100 group-hover/drop:bg-indigo-50"}`}>
                     {isDragging ? (
-                        <FileText className="w-6 h-6 text-indigo-400" />
+                        <FileText className="w-6 h-6 text-indigo-600" />
                     ) : (
-                        <Upload className="w-5 h-5 text-zinc-500 group-hover/drop:text-indigo-400 transition-colors" />
+                        <Upload className="w-5 h-5 text-slate-400 group-hover/drop:text-indigo-600 transition-colors" />
                     )}
                 </div>
                 <div className="text-center">
-                    <p className="text-[11px] text-zinc-400 font-medium">
+                    <p className="text-[11px] text-slate-500 font-medium">
                         {isDragging ? "Release to audit" : "Drop Resume PDF"}
                     </p>
-                    <p className="text-[9px] text-zinc-600 mt-0.5">Instant background scan</p>
+                    <p className="text-[9px] text-slate-400 mt-0.5">Instant background scan</p>
                 </div>
             </div>
         </div>

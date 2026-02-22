@@ -153,7 +153,7 @@ const NAV_ITEMS = [
 
 export default function ForensicDashboard() {
     const gridRef = useRef<HTMLDivElement>(null);
-    const [isDark, setIsDark] = useState(true);
+    const [isDark, setIsDark] = useState(false);
 
     // Toggle dark/light class on <html>
     useEffect(() => {
@@ -180,16 +180,16 @@ export default function ForensicDashboard() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#F5F5F7] dark:bg-[#09090B] flex relative overflow-hidden">
+        <div className="min-h-screen bg-white text-slate-900 flex relative overflow-hidden">
 
             {/* ─── Sidebar ─── */}
-            <aside className="w-[220px] relative z-10 bg-white/15 dark:bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-[1.8] border-r border-white/20 dark:border-white/[0.06] flex flex-col py-5 px-3 flex-shrink-0">
+            <aside className="w-[220px] relative z-10 bg-white border-r border-slate-200 flex flex-col py-5 px-3 flex-shrink-0">
                 {/* Logo */}
                 <div className="flex items-center gap-2.5 px-3 mb-8">
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#8B5CF6] flex items-center justify-center shadow-md shadow-blue-500/20">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center shadow-md shadow-indigo-200">
                         <Fingerprint className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm font-bold text-zinc-900 dark:text-white tracking-tight">
+                    <span className="text-sm font-bold text-slate-900 tracking-tight">
                         Forensics
                     </span>
                 </div>
@@ -199,9 +199,9 @@ export default function ForensicDashboard() {
                     {NAV_ITEMS.map((item) => (
                         <button
                             key={item.label}
-                            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-200 ${item.active
-                                ? "bg-[#3B82F6]/10 dark:bg-electric-blue/10 text-[#3B82F6] dark:text-electric-blue"
-                                : "text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-obsidian-hover"
+                            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${item.active
+                                ? "bg-indigo-50 text-indigo-600"
+                                : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
                                 }`}
                         >
                             {item.icon}
@@ -211,12 +211,12 @@ export default function ForensicDashboard() {
                 </nav>
 
                 {/* Bottom */}
-                <div className="space-y-0.5 pt-4 border-t border-zinc-100 dark:border-obsidian-border">
-                    <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-obsidian-hover transition-all">
+                <div className="space-y-0.5 pt-4 border-t border-slate-200">
+                    <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all">
                         <Settings className="w-[18px] h-[18px]" />
                         Settings
                     </button>
-                    <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-obsidian-hover transition-all">
+                    <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all">
                         <HelpCircle className="w-[18px] h-[18px]" />
                         Help
                     </button>
@@ -226,18 +226,18 @@ export default function ForensicDashboard() {
             {/* ─── Main Content ─── */}
             <main className="flex-1 overflow-y-auto">
                 {/* Top Bar */}
-                <header className="sticky top-0 z-30 bg-white/15 dark:bg-white/[0.02] backdrop-blur-2xl backdrop-saturate-[1.8] border-b border-white/15 dark:border-white/[0.05] px-6 py-3 flex items-center justify-between">
+                <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/20 dark:bg-white/[0.04] border border-white/20 dark:border-white/[0.08] rounded-xl w-64 backdrop-blur-xl">
-                            <Search className="w-3.5 h-3.5 text-zinc-400" />
-                            <span className="text-[12px] text-zinc-400">Search candidates…</span>
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg w-64">
+                            <Search className="w-3.5 h-3.5 text-slate-400" />
+                            <span className="text-[12px] text-slate-400">Search candidates…</span>
                         </div>
                     </div>
                     <div className="flex items-center gap-2.5">
                         {/* Theme Toggle */}
                         <button
                             onClick={() => setIsDark(!isDark)}
-                            className="relative w-8 h-8 rounded-xl bg-white/20 dark:bg-white/[0.04] border border-white/20 dark:border-white/[0.06] flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-all duration-300 backdrop-blur-sm group"
+                            className="relative w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-900 transition-all duration-300 group"
                             aria-label="Toggle theme"
                         >
                             {isDark ? (
@@ -246,11 +246,11 @@ export default function ForensicDashboard() {
                                 <Moon className="w-4 h-4 group-hover:-rotate-12 transition-transform duration-300" />
                             )}
                         </button>
-                        <button className="relative w-8 h-8 rounded-xl bg-white/20 dark:bg-white/[0.04] border border-white/20 dark:border-white/[0.06] flex items-center justify-center text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors backdrop-blur-sm">
+                        <button className="relative w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700 transition-colors">
                             <Bell className="w-4 h-4" />
-                            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#3B82F6]" />
+                            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-indigo-600" />
                         </button>
-                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#8B5CF6] flex items-center justify-center text-white text-[11px] font-bold">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center text-white text-[11px] font-bold">
                             {CANDIDATE.avatar}
                         </div>
                     </div>
@@ -261,14 +261,14 @@ export default function ForensicDashboard() {
                     {/* Hero Greeting */}
                     <div className="bento-tile flex items-center justify-between">
                         <div>
-                            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">
+                            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
                                 Hello, Interviewer 👋
                             </h1>
-                            <p className="text-sm text-zinc-500 dark:text-zinc-500 mt-0.5">
-                                Forensic analysis complete for <span className="font-semibold text-zinc-700 dark:text-zinc-300">{CANDIDATE.name}</span> — {CANDIDATE.role}
+                            <p className="text-sm text-slate-500 mt-0.5">
+                                Forensic analysis complete for <span className="font-semibold text-slate-700">{CANDIDATE.name}</span> — {CANDIDATE.role}
                             </p>
                         </div>
-                        <span className="px-3 py-1.5 rounded-xl bg-savage-emerald/10 border border-savage-emerald/20 text-savage-emerald text-[11px] font-bold uppercase tracking-wider">
+                        <span className="px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-600 text-[11px] font-bold uppercase tracking-wider">
                             Analysis Complete
                         </span>
                     </div>
@@ -320,25 +320,25 @@ export default function ForensicDashboard() {
 function StatCard({ label, value, sub, accent }: { label: string; value: string; sub: string; accent: "orange" | "blue" | "emerald" }) {
     const colors = {
         orange: {
-            bg: "bg-gradient-to-br from-[#FF6B35] to-[#FF8F65]",
-            shadow: "shadow-orange-500/20",
+            bg: "bg-gradient-to-br from-orange-600 to-orange-500",
+            shadow: "shadow-orange-200",
         },
         blue: {
-            bg: "bg-gradient-to-br from-[#3B82F6] to-[#60A5FA]",
-            shadow: "shadow-blue-500/20",
+            bg: "bg-gradient-to-br from-indigo-600 to-indigo-500",
+            shadow: "shadow-indigo-200",
         },
         emerald: {
-            bg: "bg-gradient-to-br from-[#10B981] to-[#34D399]",
-            shadow: "shadow-emerald-500/20",
+            bg: "bg-gradient-to-br from-emerald-600 to-emerald-500",
+            shadow: "shadow-emerald-200",
         },
     };
     const c = colors[accent];
 
     return (
-        <div className={`bento-tile rounded-2xl ${c.bg} p-5 shadow-lg ${c.shadow} hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-default backdrop-blur-sm border border-white/25 shadow-[0_4px_30px_rgba(0,0,0,0.08)]`}>
-            <p className="text-white/70 text-[11px] font-semibold uppercase tracking-wider mb-2">{label}</p>
+        <div className={`bento-tile rounded-lg ${c.bg} p-5 shadow-md ${c.shadow} hover:-translate-y-1 hover:shadow-lg transition-all duration-300 cursor-default`}>
+            <p className="text-white/80 text-[11px] font-semibold uppercase tracking-wider mb-2">{label}</p>
             <p className="text-4xl font-black text-white leading-none mb-1">{value}</p>
-            <p className="text-white/60 text-[11px] font-medium">{sub}</p>
+            <p className="text-white/70 text-[11px] font-medium">{sub}</p>
         </div>
     );
 }
@@ -365,16 +365,16 @@ function JDGaugeMini({ data }: { data: typeof JD_ALIGNMENT }) {
     }, [circumference]);
 
     return (
-        <div className="rounded-2xl bg-white/20 dark:bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-[1.6] border border-white/25 dark:border-white/[0.07] p-5 h-full flex items-center gap-5 hover:-translate-y-1 hover:bg-white/30 dark:hover:bg-white/[0.05] transition-all duration-300 shadow-[0_4px_30px_rgba(0,0,0,0.05)]">
+        <div className="rounded-lg bg-white border border-slate-200 p-5 h-full flex items-center gap-5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
             {/* Gauge */}
             <div className="relative w-24 h-24 flex-shrink-0">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 96 96">
-                    <circle cx="48" cy="48" r={radius} fill="none" className="stroke-zinc-100 dark:stroke-zinc-800" strokeWidth="7" />
+                    <circle cx="48" cy="48" r={radius} fill="none" className="stroke-slate-100" strokeWidth="7" />
                     <circle
                         ref={gaugeRef}
                         cx="48" cy="48" r={radius}
                         fill="none"
-                        className="stroke-[#3B82F6]"
+                        className="stroke-indigo-600"
                         strokeWidth="7"
                         strokeLinecap="round"
                         strokeDasharray={circumference}
@@ -382,26 +382,26 @@ function JDGaugeMini({ data }: { data: typeof JD_ALIGNMENT }) {
                     />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-2xl font-black text-zinc-900 dark:text-white">{data.score}</span>
-                    <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-wider">match</span>
+                    <span className="text-2xl font-black text-slate-900">{data.score}</span>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider">match</span>
                 </div>
             </div>
 
             {/* Breakdown */}
             <div className="flex-1 space-y-2">
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2">JD Alignment</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">JD Alignment</p>
                 {data.breakdown.map((b) => (
                     <div key={b.area} className="flex items-center gap-2">
-                        <span className="text-zinc-400 dark:text-zinc-500">{b.icon}</span>
-                        <span className="text-[10px] text-zinc-500 dark:text-zinc-500 w-14 font-medium">{b.area}</span>
-                        <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                        <span className="text-slate-400">{b.icon}</span>
+                        <span className="text-[10px] text-slate-500 w-14 font-medium">{b.area}</span>
+                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                             <div
-                                className={`h-full rounded-full transition-all duration-1000 ${b.score >= 80 ? "bg-[#10B981]" : b.score >= 60 ? "bg-[#3B82F6]" : "bg-[#FF6B35]"
+                                className={`h-full rounded-full transition-all duration-1000 ${b.score >= 80 ? "bg-emerald-600" : b.score >= 60 ? "bg-indigo-600" : "bg-orange-600"
                                     }`}
                                 style={{ width: `${b.score}%` }}
                             />
                         </div>
-                        <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 w-6 text-right">{b.score}</span>
+                        <span className="text-[10px] font-bold text-slate-500 w-6 text-right">{b.score}</span>
                     </div>
                 ))}
             </div>
@@ -415,28 +415,28 @@ function JDGaugeMini({ data }: { data: typeof JD_ALIGNMENT }) {
 
 function VerdictCard({ data }: { data: typeof VERDICT_DATA }) {
     return (
-        <div className="rounded-2xl bg-white/20 dark:bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-[1.6] border border-white/25 dark:border-white/[0.07] p-6 h-full relative overflow-hidden hover:-translate-y-1 hover:bg-white/30 dark:hover:bg-white/[0.05] transition-all duration-300 shadow-[0_4px_30px_rgba(0,0,0,0.05)]">
+        <div className="rounded-lg bg-white border border-slate-200 p-6 h-full relative overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
             {/* Subtle gradient overlay */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-[#10B981]/5 to-transparent rounded-full -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-emerald-500/5 to-transparent rounded-full -translate-y-1/3 translate-x-1/3 pointer-events-none" />
 
             <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
                     <div className="flex items-center gap-2">
                         <span className="relative flex h-2.5 w-2.5">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#10B981]" />
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-600 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600" />
                         </span>
-                        <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#10B981]">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-600">
                             Hire Recommended
                         </span>
                     </div>
                 </div>
 
-                <h2 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight leading-tight mb-3">
+                <h2 className="text-xl font-black text-slate-900 tracking-tight leading-tight mb-3">
                     {data.verdict}
                 </h2>
 
-                <p className="text-[12px] leading-relaxed text-zinc-500 font-medium max-w-lg">
+                <p className="text-[12px] leading-relaxed text-slate-500 font-medium max-w-lg">
                     {data.summary}
                 </p>
 
@@ -447,11 +447,11 @@ function VerdictCard({ data }: { data: typeof VERDICT_DATA }) {
                         { label: "Architecture", value: "B+", icon: <Layers className="w-3 h-3" /> },
                         { label: "Best Practices", value: "B", icon: <Award className="w-3 h-3" /> },
                     ].map((m) => (
-                        <div key={m.label} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 dark:bg-white/[0.03] backdrop-blur-lg border border-white/15 dark:border-white/[0.05]">
-                            <span className="text-zinc-400">{m.icon}</span>
+                        <div key={m.label} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200">
+                            <span className="text-slate-400">{m.icon}</span>
                             <div>
-                                <p className="text-[9px] text-zinc-400 uppercase tracking-wider font-medium">{m.label}</p>
-                                <p className="text-sm font-black text-zinc-900 dark:text-white">{m.value}</p>
+                                <p className="text-[9px] text-slate-400 uppercase tracking-wider font-medium">{m.label}</p>
+                                <p className="text-sm font-black text-slate-900">{m.value}</p>
                             </div>
                         </div>
                     ))}
@@ -480,10 +480,10 @@ function BehavioralRadar({ axes }: { axes: RadarAxis[] }) {
     const dataPoly = dataPoints.map((p) => `${p.x},${p.y}`).join(" ");
 
     return (
-        <div className="rounded-2xl bg-white/20 dark:bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-[1.6] border border-white/25 dark:border-white/[0.07] p-5 h-full flex flex-col items-center justify-center hover:-translate-y-1 hover:bg-white/30 dark:hover:bg-white/[0.05] transition-all duration-300 shadow-[0_4px_30px_rgba(0,0,0,0.05)]">
+        <div className="rounded-lg bg-white border border-slate-200 p-5 h-full flex flex-col items-center justify-center hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
             <div className="flex items-center gap-1.5 mb-3">
-                <Activity className="w-3.5 h-3.5 text-[#8B5CF6]" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Behavioral DNA</span>
+                <Activity className="w-3.5 h-3.5 text-indigo-600" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Behavioral DNA</span>
             </div>
 
             <svg viewBox="0 0 160 160" className="w-full max-w-[180px]">
@@ -492,21 +492,21 @@ function BehavioralRadar({ axes }: { axes: RadarAxis[] }) {
                         const p = polar(i * angleStep, l * maxR);
                         return `${p.x},${p.y}`;
                     }).join(" ");
-                    return <polygon key={l} points={pts} fill="none" className="stroke-zinc-200 dark:stroke-zinc-800" strokeWidth="0.6" />;
+                    return <polygon key={l} points={pts} fill="none" className="stroke-slate-200" strokeWidth="0.6" />;
                 })}
                 {axes.map((_, i) => {
                     const p = polar(i * angleStep, maxR);
-                    return <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} className="stroke-zinc-200 dark:stroke-zinc-800" strokeWidth="0.5" />;
+                    return <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} className="stroke-slate-200" strokeWidth="0.5" />;
                 })}
-                <polygon points={dataPoly} fill="rgba(139,92,246,0.12)" stroke="#8B5CF6" strokeWidth="1.5" strokeLinejoin="round" />
+                <polygon points={dataPoly} fill="rgba(99,102,241,0.08)" stroke="rgb(99,102,241)" strokeWidth="1.5" strokeLinejoin="round" />
                 {dataPoints.map((p, i) => (
-                    <circle key={i} cx={p.x} cy={p.y} r="2.5" fill="#8B5CF6" className="stroke-white dark:stroke-obsidian-surface" strokeWidth="1.5" />
+                    <circle key={i} cx={p.x} cy={p.y} r="2.5" fill="rgb(99,102,241)" className="stroke-white" strokeWidth="1.5" />
                 ))}
                 {axes.map((a, i) => {
                     const pos = polar(i * angleStep, maxR + 14);
                     return (
                         <text key={i} x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="central"
-                            className="fill-zinc-400 dark:fill-zinc-500 text-[6px] font-bold uppercase" style={{ letterSpacing: "0.04em" }}>
+                            className="fill-slate-400 text-[6px] font-bold uppercase" style={{ letterSpacing: "0.04em" }}>
                             {a.label}
                         </text>
                     );
@@ -516,8 +516,8 @@ function BehavioralRadar({ axes }: { axes: RadarAxis[] }) {
             <div className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1">
                 {axes.map((a) => (
                     <div key={a.label} className="flex items-center gap-1">
-                        <span className="text-[8px] text-zinc-400 font-medium">{a.label}</span>
-                        <span className="text-[9px] font-bold text-[#8B5CF6]">{Math.round(a.value * 100)}</span>
+                        <span className="text-[8px] text-slate-400 font-medium">{a.label}</span>
+                        <span className="text-[9px] font-bold text-indigo-600">{Math.round(a.value * 100)}</span>
                     </div>
                 ))}
             </div>
@@ -540,40 +540,40 @@ function TechDNAGrid({ cards }: { cards: MicroCard[] }) {
     };
 
     return (
-        <div className="rounded-2xl bg-white/20 dark:bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-[1.6] border border-white/25 dark:border-white/[0.07] p-5 hover:-translate-y-1 hover:bg-white/30 dark:hover:bg-white/[0.05] transition-all duration-300 shadow-[0_4px_30px_rgba(0,0,0,0.05)]">
+        <div className="rounded-lg bg-white border border-slate-200 p-5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-1.5">
-                    <Brain className="w-3.5 h-3.5 text-[#3B82F6]" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Technical DNA</span>
+                    <Brain className="w-3.5 h-3.5 text-indigo-600" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Technical DNA</span>
                 </div>
-                <span className="text-[10px] text-zinc-400">6 domains analyzed</span>
+                <span className="text-[10px] text-slate-400">6 domains analyzed</span>
             </div>
 
             <div className="grid grid-cols-6 gap-2.5">
                 {cards.map((card) => {
                     const color =
-                        card.quality >= 80 ? { text: "text-[#10B981]", bg: "bg-[#10B981]/8", bar: "bg-[#10B981]", border: "border-[#10B981]/15" } :
-                            card.quality >= 50 ? { text: "text-[#3B82F6]", bg: "bg-[#3B82F6]/8", bar: "bg-[#3B82F6]", border: "border-[#3B82F6]/15" } :
-                                { text: "text-[#FF6B35]", bg: "bg-[#FF6B35]/8", bar: "bg-[#FF6B35]", border: "border-[#FF6B35]/15" };
+                        card.quality >= 80 ? { text: "text-emerald-600", bg: "bg-emerald-50", bar: "bg-emerald-600", border: "border-emerald-200" } :
+                            card.quality >= 50 ? { text: "text-indigo-600", bg: "bg-indigo-50", bar: "bg-indigo-600", border: "border-indigo-200" } :
+                                { text: "text-orange-600", bg: "bg-orange-50", bar: "bg-orange-600", border: "border-orange-200" };
 
                     return (
                         <div
                             key={card.domain}
-                            className="rounded-xl bg-white/10 dark:bg-white/[0.03] backdrop-blur-xl backdrop-saturate-150 border border-white/20 dark:border-white/[0.06] p-3.5 hover:bg-white/25 dark:hover:bg-white/[0.06] hover:border-white/35 dark:hover:border-white/[0.1] hover:-translate-y-1 transition-all duration-200 group cursor-default"
+                            className="rounded-lg bg-slate-50 border border-slate-200 p-3.5 hover:bg-slate-100 hover:border-slate-300 hover:-translate-y-1 transition-all duration-200 group cursor-default"
                         >
                             <div className="flex items-center justify-between mb-2.5">
-                                <div className="w-8 h-8 rounded-xl bg-white/15 dark:bg-white/[0.05] border border-white/20 dark:border-white/[0.08] flex items-center justify-center text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+                                <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-500 group-hover:text-slate-700 transition-colors">
                                     {icons[card.domain]}
                                 </div>
                                 <span className={`text-xs font-black ${color.text} px-2 py-0.5 rounded-lg ${color.bg} border ${color.border}`}>
                                     {card.quality}
                                 </span>
                             </div>
-                            <h4 className="text-[11px] font-bold text-zinc-700 dark:text-zinc-200 uppercase tracking-wider mb-0.5">
+                            <h4 className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
                                 {card.domain}
                             </h4>
-                            <p className="text-[10px] text-zinc-400 font-medium leading-snug">{card.method}</p>
-                            <div className="mt-2.5 h-1 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+                            <p className="text-[10px] text-slate-400 font-medium leading-snug">{card.method}</p>
+                            <div className="mt-2.5 h-1 bg-slate-200 rounded-full overflow-hidden">
                                 <div className={`h-full rounded-full ${color.bar} transition-all duration-1000`} style={{ width: `${card.quality}%` }} />
                             </div>
                         </div>
@@ -598,27 +598,27 @@ function QuestionsCard({ questions }: { questions: string[] }) {
     }, []);
 
     return (
-        <div className="rounded-2xl bg-white/20 dark:bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-[1.6] border border-white/25 dark:border-white/[0.07] p-5 h-full hover:-translate-y-1 hover:bg-white/30 dark:hover:bg-white/[0.05] transition-all duration-300 shadow-[0_4px_30px_rgba(0,0,0,0.05)]">
+        <div className="rounded-lg bg-white border border-slate-200 p-5 h-full hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
             <div className="flex items-center gap-1.5 mb-4">
-                <Zap className="w-3.5 h-3.5 text-[#FF6B35]" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Pressure-Test Questions</span>
+                <Zap className="w-3.5 h-3.5 text-orange-600" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Pressure-Test Questions</span>
             </div>
 
             <ol className="space-y-3">
                 {questions.map((q, i) => (
                     <li key={i} className="flex gap-3 group/q">
-                        <span className="text-[10px] font-black text-zinc-300 dark:text-zinc-700 mt-0.5 w-5 flex-shrink-0 text-right">
+                        <span className="text-[10px] font-black text-slate-300 mt-0.5 w-5 flex-shrink-0 text-right">
                             {String(i + 1).padStart(2, "0")}
                         </span>
-                        <p className="text-[12px] leading-relaxed text-zinc-600 dark:text-zinc-400 font-medium flex-1">
+                        <p className="text-[12px] leading-relaxed text-slate-600 font-medium flex-1">
                             {q}
                         </p>
                         <button
                             onClick={() => handleCopy(q, i)}
-                            className="flex-shrink-0 w-7 h-7 rounded-lg bg-white/15 dark:bg-white/[0.04] border border-white/20 dark:border-white/[0.06] text-zinc-400 hover:text-zinc-700 dark:hover:text-white hover:bg-white/30 dark:hover:bg-white/[0.08] transition-all duration-200 flex items-center justify-center opacity-0 group-hover/q:opacity-100"
+                            className="flex-shrink-0 w-7 h-7 rounded-lg bg-slate-100 border border-slate-200 text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-all duration-200 flex items-center justify-center opacity-0 group-hover/q:opacity-100"
                             aria-label="Copy question"
                         >
-                            {copiedIdx === i ? <Check className="w-3 h-3 text-[#10B981]" /> : <Copy className="w-3 h-3" />}
+                            {copiedIdx === i ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
                         </button>
                     </li>
                 ))}
@@ -633,21 +633,21 @@ function QuestionsCard({ questions }: { questions: string[] }) {
 
 function TimelineCard({ entries }: { entries: TraceEntry[] }) {
     const agentColors: Record<string, string> = {
-        Scout: "text-[#3B82F6]",
-        Judge: "text-[#FF6B35]",
-        Verdict: "text-[#10B981]",
+        Scout: "text-indigo-600",
+        Judge: "text-orange-600",
+        Verdict: "text-emerald-600",
     };
     const dotColors: Record<string, string> = {
-        info: "bg-zinc-300 dark:bg-zinc-600",
-        warning: "bg-[#FF6B35]",
-        success: "bg-[#10B981]",
+        info: "bg-slate-300",
+        warning: "bg-orange-600",
+        success: "bg-emerald-600",
     };
 
     return (
-        <div className="rounded-2xl bg-white/20 dark:bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-[1.6] border border-white/25 dark:border-white/[0.07] flex flex-col h-full hover:-translate-y-1 hover:bg-white/30 dark:hover:bg-white/[0.05] transition-all duration-300 shadow-[0_4px_30px_rgba(0,0,0,0.05)]">
-            <div className="px-5 py-3.5 border-b border-white/15 dark:border-white/[0.05] flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Reasoning Trace</span>
+        <div className="rounded-lg bg-white border border-slate-200 flex flex-col h-full hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+            <div className="px-5 py-3.5 border-b border-slate-200 flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-slate-400" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Reasoning Trace</span>
             </div>
 
             <div className="flex-1 overflow-y-auto scrollbar-thin px-5 py-3 space-y-3">
@@ -655,16 +655,16 @@ function TimelineCard({ entries }: { entries: TraceEntry[] }) {
                     <div key={i} className="flex gap-2.5">
                         <div className="flex flex-col items-center pt-1.5">
                             <div className={`w-1.5 h-1.5 rounded-full ${dotColors[entry.type]} flex-shrink-0`} />
-                            {i < entries.length - 1 && <div className="w-px flex-1 bg-zinc-100 dark:bg-zinc-800 mt-1" />}
+                            {i < entries.length - 1 && <div className="w-px flex-1 bg-slate-200 mt-1" />}
                         </div>
                         <div className="flex-1 pb-1">
                             <div className="flex items-center gap-1.5 mb-0.5">
-                                <span className={`text-[9px] font-bold uppercase tracking-wider ${agentColors[entry.agent] ?? "text-zinc-400"}`}>
+                                <span className={`text-[9px] font-bold uppercase tracking-wider ${agentColors[entry.agent] ?? "text-slate-400"}`}>
                                     {entry.agent}
                                 </span>
-                                <span className="text-[8px] text-zinc-300 dark:text-zinc-700 font-mono">{entry.timestamp}</span>
+                                <span className="text-[8px] text-slate-400 font-mono">{entry.timestamp}</span>
                             </div>
-                            <p className="text-[10px] leading-relaxed font-mono text-zinc-500 dark:text-zinc-500 font-medium">
+                            <p className="text-[10px] leading-relaxed font-mono text-slate-500 font-medium">
                                 {entry.message}
                             </p>
                         </div>
