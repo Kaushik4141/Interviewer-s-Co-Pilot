@@ -12,7 +12,7 @@ function CandidateContent() {
     const roomId = searchParams.get("room") || searchParams.get("code") || "default-room";
 
     const handleExit = () => {
-        router.push("/");
+        router.push("/control-center");
     };
 
     return (

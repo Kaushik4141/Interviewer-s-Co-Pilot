@@ -58,7 +58,7 @@ export default function InterviewDashboard({ candidateName, role, roomId, forens
       ?.interviewQuestions,
   )
     ? ((forensicRecord.candidateContext as { interviewQuestions?: string[] })
-        .interviewQuestions ?? [])
+      .interviewQuestions ?? [])
     : [];
   const [followUpQuestions, setFollowUpQuestions] = useState<string[]>(baseFollowUpQuestions);
   const resumeGaps = forensicRecord.candidateContext?.discrepancies ?? [];
@@ -97,7 +97,7 @@ export default function InterviewDashboard({ candidateName, role, roomId, forens
   }, []);
 
   const leaveCall = () => {
-    window.location.href = "/";
+    window.location.href = "/control-center";
   };
 
   const handleSyncResult = (result: SyncAnalysisResult) => {
@@ -237,19 +237,19 @@ export default function InterviewDashboard({ candidateName, role, roomId, forens
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-blue-500" />
               <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-3 flex items-center justify-between">
                 <span className="flex items-center gap-2">
-                  <Triangle className="w-3 h-3 text-emerald-500" /> 
+                  <Triangle className="w-3 h-3 text-emerald-500" />
                   Intelligence LIVE
                 </span>
                 {isSyncing && <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />}
               </h4>
-              
+
               {latestSyncResult.alert && (
                 <div className="mb-3 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg">
                   <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest block mb-1">Alert</span>
                   <p className="text-xs text-red-400 font-medium">{latestSyncResult.alert}</p>
                 </div>
               )}
-              
+
               {latestSyncResult.followUpQuestion && (
                 <div className="px-3 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                   <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-1">Drill-Down Question</span>

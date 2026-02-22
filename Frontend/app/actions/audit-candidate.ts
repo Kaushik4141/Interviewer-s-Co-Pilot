@@ -120,8 +120,8 @@ function buildFallback(
     context.contradictionScore >= 75
       ? 'No-Hire - Significant Claim Mismatch (Fallback)'
       : context.contradictionScore >= 55
-      ? 'Hold - Needs Deep Validation (Fallback)'
-      : 'Proceed - Validate in Interview (Fallback)';
+        ? 'Hold - Needs Deep Validation (Fallback)'
+        : 'Proceed - Validate in Interview (Fallback)';
 
   return {
     ...context,
@@ -150,7 +150,7 @@ export async function auditCandidate(
     send?.('status', 'Scout is auditing repository structure...');
     const markdownContext = githubMarkdownContent || await Promise.race([
       fetchRepoStructure(githubUrl),
-      
+
     ]);
     const boundedMarkdown = (markdownContext ?? '').substring(0, 15000);
 
@@ -236,7 +236,7 @@ export async function auditCandidate(
       resolvedObject = await Promise.race([
         object,
         new Promise<never>((_, reject) => {
-          setTimeout(() => reject(new Error('Final audit synthesis timed out.')), 45000); 
+          setTimeout(() => reject(new Error('Final audit synthesis timed out.')), 45000);
         }),
       ]);
     } catch (error) {
