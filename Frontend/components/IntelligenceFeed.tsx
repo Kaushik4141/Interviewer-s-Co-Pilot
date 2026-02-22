@@ -48,8 +48,57 @@ const OBSERVATIONS: Observation[] = [
   },
 ];
 
-export default function IntelligenceFeed() {
+interface IntelligenceFeedProps {
+  followUpQuestions: string[];
+  resumeGaps: string[];
+  liveContradiction?: string | null;
+  issueCategory?: string | null;
+}
+
+export default function IntelligenceFeed({
+  followUpQuestions,
+  resumeGaps,
+  liveContradiction,
+  issueCategory,
+}: IntelligenceFeedProps) {
   const feedRef = useRef<HTMLDivElement>(null);
+  const [dynamicItems, setDynamicItems] = useState<Observation[]>(OBSERVATIONS);
+
+  useEffect(() => {
+    const seeded: Observation[] = [];
+
+    followUpQuestions.slice(0, 4).forEach((question, idx) => {
+      seeded.push({
+        id: 100 + idx,
+        type: "insight",
+        message: question,
+        action: "Ask follow-up now",
+        timestamp: "PROFILE",
+      });
+    });
+
+    resumeGaps.slice(0, 3).forEach((gap, idx) => {
+      seeded.push({
+        id: 200 + idx,
+        type: "warning",
+        message: gap,
+        action: "Challenge claim",
+        timestamp: "AUDIT",
+      });
+    });
+
+    if (liveContradiction) {
+      seeded.unshift({
+        id: 999,
+        type: "warning",
+        message: `${issueCategory ?? 'SAVAGE GAP'}: ${liveContradiction}`,
+        action: "Deep dive immediately",
+        timestamp: "LIVE",
+      });
+    }
+
+    setDynamicItems(seeded.length > 0 ? seeded : OBSERVATIONS);
+  }, [followUpQuestions, resumeGaps, liveContradiction, issueCategory]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -79,7 +128,7 @@ export default function IntelligenceFeed() {
       </div>
 
       <div ref={feedRef} className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-none">
-        {OBSERVATIONS.map((obs) => (
+        {dynamicItems.map((obs) => (
           <article key={obs.id} className="feed-item group">
             <div className="flex gap-3">
               <div className="mt-1">

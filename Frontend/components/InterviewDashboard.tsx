@@ -47,6 +47,17 @@ export default function InterviewDashboard({ candidateName, role, roomId, forens
   const [isSyncing, setIsSyncing] = useState(false);
   const [interviewerPeerId, setInterviewerPeerId] = useState("");
   const interviewClientState = useInterviewClientState();
+  const forensicRecord = (forensicContext ?? {}) as {
+    candidateContext?: {
+      resume?: { skills?: string[] };
+      discrepancies?: string[];
+    } & Record<string, unknown>;
+  };
+  const followUpQuestions = Array.isArray((forensicRecord.candidateContext as { interviewQuestions?: unknown } | undefined)?.interviewQuestions)
+    ? ((forensicRecord.candidateContext as { interviewQuestions?: string[] }).interviewQuestions ?? [])
+    : [];
+  const resumeGaps = forensicRecord.candidateContext?.discrepancies ?? [];
+  const resumeSkills = forensicRecord.candidateContext?.resume?.skills ?? [];
 
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomBarRef = useRef<HTMLDivElement>(null);
@@ -139,6 +150,9 @@ export default function InterviewDashboard({ candidateName, role, roomId, forens
           <LeftSidebar
             candidateName={candidateName}
             role={role}
+            resumeSkills={resumeSkills}
+            resumeGaps={resumeGaps}
+            followUpQuestions={followUpQuestions}
             liveContradiction={interviewClientState.latestContradiction}
             issueCategory={interviewClientState.issueCategory}
             commitSentimentMatch={interviewClientState.commitSentimentMatch}

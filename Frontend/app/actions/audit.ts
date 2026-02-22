@@ -118,7 +118,7 @@ export async function auditCandidate(
           '',
           `GitHub URL: ${githubUrl}`,
           'Repository Markdown:',
-          githubMarkdownContent,
+          (githubMarkdownContent ?? '').substring(0, 20000), // Truncate for Cerebras safety
         ].join('\n'),
         prepareStep: ({ steps }) => {
           if (steps.length === 0) {

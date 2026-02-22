@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { createOpenAI } from '@ai-sdk/openai';
 
 const cerebras = createOpenAI({
@@ -6,6 +7,11 @@ const cerebras = createOpenAI({
 });
 
 export const model = cerebras.chat('llama3.1-8b');
+=======
+import { model as cerebrasModel } from './ai/config';
+export const model = cerebrasModel;
+
+>>>>>>> Stashed changes
 
 export interface CandidateContext {
   resume: {

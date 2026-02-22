@@ -1,6 +1,6 @@
 'use server';
 
-import { generateObject } from 'ai';
+import { streamObject } from 'ai';
 import { z } from 'zod';
 import { model, CandidateContext, getInitialContext } from '../../lib/ai-orchestrator';
 import { analyzeCodebase, SCOUT_PROMPT } from '@/lib/ai/tools';
@@ -20,8 +20,6 @@ const auditResponseSchema = z.object({
   interviewQuestions: z.array(z.string()).describe('List of 5-7 specific, deep technical questions to pressure-test the candidate on their architecture choices and identified gaps.'),
 });
 
-import { streamObject } from 'ai';
-
 /** send callback type: (eventType, payload) => void */
 type SendFn = (type: string, payload: unknown) => void;
 
@@ -32,6 +30,7 @@ export async function auditCandidate(
   githubMarkdownContent?: string,
   send?: SendFn
 ): Promise<CandidateContext & { interviewQuestions: string[] }> {
+<<<<<<< Updated upstream
   const buildFallback = (reason: string, toolResult?: unknown): CandidateContext & { interviewQuestions: string[] } => {
     const context = getInitialContext();
     context.resume = resumeContext;
@@ -74,6 +73,36 @@ export async function auditCandidate(
         'What security risk in this repo would you prioritize first?',
         'How would this architecture scale to 10x load?',
         'What tradeoff did you intentionally accept and why?',
+=======
+  const buildFallbackResult = (
+    reason: string,
+    toolResult: unknown,
+  ): CandidateContext & { interviewQuestions: string[] } => {
+    const context = getInitialContext();
+    context.resume = resumeContext;
+
+    if (toolResult) {
+      context.githubData.push(toolResult as CandidateContext['githubData'][number]);
+    }
+
+    context.jdMatchScore = 60;
+    context.contradictionScore = 45;
+    context.savageVerdict = 'Partial Audit - Model JSON mismatch fallback';
+    context.actualApproach = [];
+    context.discrepancies = [
+      `AI schema mismatch fallback triggered: ${reason}`,
+      'Use generated interview questions below to continue interview safely.',
+    ];
+
+    return {
+      ...context,
+      interviewQuestions: [
+        'Walk me through your repository architecture and why you chose that structure.',
+        'Show one feature you are most proud of and explain key trade-offs you made.',
+        'What testing strategy do you use, and where is it implemented in this repo?',
+        'How would you harden this system for production security and reliability?',
+        'Which resume claim should we validate first using your codebase as evidence?',
+>>>>>>> Stashed changes
       ],
     };
   };
@@ -160,12 +189,18 @@ export async function auditCandidate(
     Please compare the resume with the findings and generate the JSON audit.
   `;
 
+<<<<<<< Updated upstream
+=======
+  let resolvedObject: z.infer<typeof auditResponseSchema>;
+  try {
+>>>>>>> Stashed changes
     const { object } = await streamObject({
       model: model,
       system: systemPrompt,
       prompt: userPrompt,
       schema: auditResponseSchema,
     });
+<<<<<<< Updated upstream
     const resolvedObject = await Promise.race([
       object,
       new Promise<never>((_, reject) => {
@@ -176,6 +211,14 @@ export async function auditCandidate(
     // Construct and return final context
     const context = getInitialContext();
     context.resume = resumeContext;
+=======
+    resolvedObject = await object;
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : 'Unknown audit synthesis error';
+    console.warn('[auditCandidate] Falling back due to synthesis schema mismatch:', reason);
+    return buildFallbackResult(reason, toolResult);
+  }
+>>>>>>> Stashed changes
 
     if (
       toolResult &&

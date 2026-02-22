@@ -21,7 +21,6 @@ export default function Home() {
         onStartSession={handleStartSession}
         onJoinSession={handleJoinSession}
       />
-
     </div>
   );
 }
