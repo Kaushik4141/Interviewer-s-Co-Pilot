@@ -13,6 +13,7 @@ export async function fetchRepoStructure(githubUrl: string): Promise<string> {
     }
 
     const data = await res.json();
+    console.log(data);
 
     // Implement a simple retry/polling logic if scraper returns a 'task_id'
     if (data.task_id) {

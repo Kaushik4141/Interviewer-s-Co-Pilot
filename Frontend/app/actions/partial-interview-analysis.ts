@@ -1,6 +1,7 @@
 'use server';
 
 import { streamText } from 'ai';
+import { model as cerebrasModel } from '../../lib/ai-orchestrator';
 
 export interface PartialAnalysisInput {
   candidateId: string;
@@ -40,7 +41,7 @@ function parseRedFlags(raw: string): string[] {
 
 export async function runPartialInterviewAnalysis(input: PartialAnalysisInput): Promise<PartialAnalysisOutput> {
   const result = streamText({
-    model: 'openai:gpt-4o-mini',
+    model: cerebrasModel,
     system: [
       'You are an interview risk auditor.',
       'Compare the latest interview transcript against the previous GitHub audit findings.',

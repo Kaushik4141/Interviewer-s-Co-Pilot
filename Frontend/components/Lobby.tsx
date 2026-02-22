@@ -32,6 +32,14 @@ export default function Lobby({ onStartSession, onJoinSession }: LobbyProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
   const [meetingId, setMeetingId] = useState("");
+  const [showCandidateGate, setShowCandidateGate] = useState(false);
+  const [pendingJoinCode, setPendingJoinCode] = useState("");
+  const [candidateNameGate, setCandidateNameGate] = useState("");
+  const [candidateRoleGate, setCandidateRoleGate] = useState("");
+  const [candidateGithubUrl, setCandidateGithubUrl] = useState("");
+  const [candidateResumeFile, setCandidateResumeFile] = useState<File | null>(null);
+  const [isAuditingCandidate, setIsAuditingCandidate] = useState(false);
+  const [candidateGateError, setCandidateGateError] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const leftRef = useRef<HTMLDivElement>(null);
@@ -96,6 +104,76 @@ export default function Lobby({ onStartSession, onJoinSession }: LobbyProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const hasCandidateSession = (): boolean => {
+    try {
+      const raw = localStorage.getItem("candidate-session");
+      if (!raw) return false;
+      const parsed = JSON.parse(raw) as { githubUrl?: string; auditedAt?: number };
+      return Boolean(parsed.githubUrl && parsed.auditedAt);
+    } catch {
+      return false;
+    }
+  };
+
+  const handleJoinClick = () => {
+    const code = joinCode.trim();
+    if (!code) return;
+    if (hasCandidateSession()) {
+      onJoinSession(code);
+      return;
+    }
+
+    setPendingJoinCode(code);
+    setCandidateGateError(null);
+    setShowCandidateGate(true);
+  };
+
+  const handleCandidateVerify = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!candidateResumeFile || !candidateGithubUrl.trim()) {
+      setCandidateGateError("Resume PDF and GitHub URL are required.");
+      return;
+    }
+
+    setCandidateGateError(null);
+    setIsAuditingCandidate(true);
+    try {
+      const formData = new FormData();
+      formData.append("resume", candidateResumeFile);
+      formData.append("githubUrl", candidateGithubUrl.trim());
+
+      const response = await fetch("/api/audit", {
+        method: "POST",
+        body: formData,
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload?.details || payload?.error || "Candidate verification failed.");
+      }
+
+      localStorage.setItem(
+        "candidate-session",
+        JSON.stringify({
+          candidateName: candidateNameGate || "Candidate",
+          targetRole: candidateRoleGate || role || "Software Engineer",
+          githubUrl: candidateGithubUrl.trim(),
+          auditedAt: Date.now(),
+        }),
+      );
+
+      const targetCode = pendingJoinCode || joinCode.trim();
+      setShowCandidateGate(false);
+      if (targetCode) {
+        onJoinSession(targetCode);
+      }
+    } catch (verifyError) {
+      const message = verifyError instanceof Error ? verifyError.message : "Candidate verification failed.";
+      setCandidateGateError(message);
+    } finally {
+      setIsAuditingCandidate(false);
+    }
+  };
+
   return (
     <div ref={containerRef} className="min-h-screen bg-white dark:bg-zinc-950 flex flex-col selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-black overflow-hidden">
       {/* Top Nav */}
@@ -146,7 +224,7 @@ export default function Lobby({ onStartSession, onJoinSession }: LobbyProps) {
               />
             </div>
             <button
-              onClick={() => joinCode && onJoinSession(joinCode)}
+              onClick={handleJoinClick}
               className="text-zinc-400 font-bold text-sm hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors px-4"
             >
               Join
@@ -277,6 +355,73 @@ export default function Lobby({ onStartSession, onJoinSession }: LobbyProps) {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Candidate Verification Modal */}
+      {showCandidateGate && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
+          <div
+            className="absolute inset-0 bg-zinc-900/40 dark:bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowCandidateGate(false)}
+          />
+          <div className="relative w-full max-w-md bg-white dark:bg-zinc-900 rounded-[32px] border border-zinc-200 dark:border-zinc-800 shadow-2xl overflow-hidden">
+            <div className="p-8">
+              <form onSubmit={handleCandidateVerify} className="space-y-4">
+                <div className="space-y-1">
+                  <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Candidate Verification</h2>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                    Upload resume and GitHub before joining interview.
+                  </p>
+                </div>
+
+                <input
+                  type="text"
+                  value={candidateNameGate}
+                  onChange={(e) => setCandidateNameGate(e.target.value)}
+                  placeholder="Candidate name"
+                  className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm"
+                />
+
+                <input
+                  type="text"
+                  value={candidateRoleGate}
+                  onChange={(e) => setCandidateRoleGate(e.target.value)}
+                  placeholder="Target role"
+                  className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm"
+                />
+
+                <input
+                  type="url"
+                  required
+                  value={candidateGithubUrl}
+                  onChange={(e) => setCandidateGithubUrl(e.target.value)}
+                  placeholder="GitHub URL"
+                  className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm"
+                />
+
+                <input
+                  type="file"
+                  required
+                  accept=".pdf"
+                  onChange={(e) => setCandidateResumeFile(e.target.files?.[0] ?? null)}
+                  className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm file:mr-3 file:rounded file:border-0 file:bg-zinc-200 dark:file:bg-zinc-800 file:px-2 file:py-1"
+                />
+
+                {candidateGateError && (
+                  <p className="text-xs text-red-500">{candidateGateError}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isAuditingCandidate}
+                  className="w-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl py-4 font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
+                >
+                  {isAuditingCandidate ? "Verifying..." : "Verify & Join"}
+                </button>
+              </form>
             </div>
           </div>
         </div>

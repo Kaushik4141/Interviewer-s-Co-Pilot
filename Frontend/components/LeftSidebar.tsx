@@ -27,10 +27,14 @@ const EXPERIENCES: Experience[] = [
 interface SidebarProps {
   candidateName: string;
   role: string;
+  resumeSkills?: string[];
+  resumeGaps?: string[];
+  followUpQuestions?: string[];
   liveContradiction?: string | null;
   issueCategory?: string | null;
   commitSentimentMatch?: 'aligned' | 'mixed' | 'contradicted' | null;
   commitVibeNote?: string | null;
+  onSelectIntelligenceItem?: (payload: { message: string; action: string }) => void;
 }
 
 type TabType = "profile" | "intelligence";
@@ -38,10 +42,14 @@ type TabType = "profile" | "intelligence";
 export default function LeftSidebar({
   candidateName,
   role,
+  resumeSkills,
+  resumeGaps,
+  followUpQuestions,
   liveContradiction,
   issueCategory,
   commitSentimentMatch,
   commitVibeNote,
+  onSelectIntelligenceItem,
 }: SidebarProps) {
   const [activeTab, setActiveTab] = useState<TabType>("profile");
 
@@ -125,6 +133,30 @@ export default function LeftSidebar({
                 <p className="mt-1 text-[11px] leading-relaxed text-red-200">{liveContradiction}</p>
               </div>
             )}
+            {resumeSkills && resumeSkills.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {resumeSkills.slice(0, 6).map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-[10px] font-medium border border-zinc-200 dark:border-zinc-700"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            )}
+            {resumeGaps && resumeGaps.length > 0 && (
+              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-300">Audit Gaps</p>
+                <ul className="mt-1 space-y-1">
+                  {resumeGaps.slice(0, 3).map((gap, idx) => (
+                    <li key={`${gap}-${idx}`} className="text-[11px] text-amber-200">
+                      {gap}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <TechDNACard />
           </section>
 
@@ -159,7 +191,13 @@ export default function LeftSidebar({
           </section>
         </div>
       ) : (
-        <IntelligenceFeed />
+        <IntelligenceFeed
+          followUpQuestions={followUpQuestions ?? []}
+          resumeGaps={resumeGaps ?? []}
+          liveContradiction={liveContradiction}
+          issueCategory={issueCategory}
+          onSelect={onSelectIntelligenceItem}
+        />
       )}
     </aside>
   );
